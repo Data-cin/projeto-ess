@@ -13,6 +13,7 @@ module.exports = [
       sinopse: "The story of J. Robert Oppenheimer’s role in the development of the atomic bomb during World War II.",
       diretor: "Christopher Nolan",
       genero: 3,
+      faixa_etaria: 16,
       posts: [
         {
           post_id: uuidv4(),
@@ -41,6 +42,7 @@ module.exports = [
       sinopse: "Synopsis of movie 2",
       diretor: "Director 2",
       genero: 2,
+      faixa_etaria: 12,
       posts: []
     }
   ];
