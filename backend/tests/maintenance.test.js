@@ -1,5 +1,6 @@
 const{ defineFeature, loadFeature } = require('jest-cucumber');
 const axios = require("axios");
+const { expect } = require('@jest/globals');
 const maintenance_feature = loadFeature("./tests/features/maintenance.feature");
 
 defineFeature(maintenance_feature, test =>{
@@ -14,11 +15,13 @@ defineFeature(maintenance_feature, test =>{
         let post_test;
         let post_final;
 
+        
         given(/^Estou no post "(.*)" que já existe no sistema$/, async (arg0) => {
             //requisição do GET
             response = await axios.get("http://localhost:3000/");
             //armazenando filme_id
             filme = response.data.find((filme)=>filme.nome === arg0);
+            //console.log("entrou aquiii");
         });
 
         and(/^Existe uma review do usuario "(.*)" com texto "(.*)"$/, async (arg0, arg1) => {
@@ -27,14 +30,16 @@ defineFeature(maintenance_feature, test =>{
             // Iterando sobre todos os posts de cada filme
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg1) {
-                    user_id = post.user_id;
-                    review = post.review;
-                    nota = post.nota;
+                if (post.user_id === arg0 && post.review === arg1) {
                     post_id = post.post_id
+                    user_id = post.user_id;
+                    nota = post.nota;
+                    review = post.review;
                     break; // Saindo do loop assim que encontramos a correspondência
                 }
             }
+            /*console.log("dados antigos");
+            console.log(post_id, user_id, nota, review);*/
         });
 
         and(/^selecionei a opção "(.*)"$/, (arg0) => {
@@ -52,6 +57,9 @@ defineFeature(maintenance_feature, test =>{
         and(/^Selecionar a opção "(.*)"$/, async (arg0) => {
             post_final = await axios.put("http://localhost:3000/maintenance", post_test);
             post_id = response.data.post_id;
+
+            /*console.log("dados novos");
+            console.log(post_id, user_id, nota, review);*/
         });
 
         then(/^Serei redirecionado a "(.*)"$/, (arg0) => {
@@ -66,14 +74,17 @@ defineFeature(maintenance_feature, test =>{
             let post_test;
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg2) {
+                if (post.user_id === arg0 && post.review === arg2) {
                     post_test = post;
                     break; // Saindo do loop assim que encontramos a correspondência
                 }
             }
             expect(post_final.data).toEqual(post_test);
         });
-    });      
+    });           
+
+
+      
 
     test('Remover review', ({ given, and, when, then }) => {
         let filme;
@@ -98,9 +109,8 @@ defineFeature(maintenance_feature, test =>{
             // Iterando sobre todos os posts de cada filme
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg1) {
+                if (post.user_id === arg0 && post.review === arg1) {
                     user_id = post.user_id;
-                    console.log("ENTROU AQUIIIIII")
                     review = post.review;
                     nota = post.nota;
                     post_id = post.post_id
@@ -129,14 +139,14 @@ defineFeature(maintenance_feature, test =>{
             let post_test;
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg2) {
+                if (post.user_id === arg0 && post.review === arg2) {
                     post_test = post;
                     break; // Saindo do loop assim que encontramos a correspondência
                 }
             }
             expect(post_final.data.message).toEqual("Review post deleted successfully");
         });
-    });      
+    });   
 
     test('Falha na edição', ({ given, and, when, then }) => {
         let filme;
@@ -161,7 +171,7 @@ defineFeature(maintenance_feature, test =>{
             // Iterando sobre todos os posts de cada filme
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg1) {
+                if (post.user_id === arg0 && post.review === arg1) {
                     user_id = post.user_id;
                     review = post.review;
                     nota = post.nota;
@@ -198,7 +208,7 @@ defineFeature(maintenance_feature, test =>{
             let post_test;
             for (let post of filme.posts) {
                 // Verificando se o post corresponde ao user_id e à review fornecidos
-                if (post.user_id === Number(arg0) && post.review === arg2) {
+                if (post.user_id === arg0 && post.review === arg2) {
                     post_test = post;
                     break; // Saindo do loop assim que encontramos a correspondência
                 }
