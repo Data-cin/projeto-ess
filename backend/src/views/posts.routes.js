@@ -8,4 +8,3 @@ router.delete("/", post_controller.deletePost);
 router.put("/", post_controller.updatePost);
 
 module.exports = router;
-

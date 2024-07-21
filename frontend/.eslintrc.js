@@ -1,10 +1,10 @@
 module.exports = {
-  root: true, 
+  root: true,
   parserOptions: {
-    ecmaVersion: 2020, 
-    sourceType: 'module', 
+    ecmaVersion: 2020,
+    sourceType: 'module',
     ecmaFeatures: {
-      jsx: true 
+      jsx: true
     }
   },
   settings: {
@@ -14,9 +14,9 @@ module.exports = {
   },
   env: {
     jest: true,
-    browser: true, 
-    amd: true, 
-    node: true 
+    browser: true,
+    amd: true,
+    node: true
   },
   extends: [
     'eslint:recommended',
@@ -28,4 +28,4 @@ module.exports = {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
     'react/prop-types': 'off' // Add this line to disable prop-types validation
   }
-};
+}
