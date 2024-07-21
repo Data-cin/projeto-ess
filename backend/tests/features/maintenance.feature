@@ -13,7 +13,7 @@ Feature: Maintenance
 Scenario: Salvar edição de review
   Given Estou no post "Oppenheimer" que já existe no sistema
   And Existe uma review do usuario "Elian Rodriguez" com texto "Horrivel!"
-  And selecionei a opção "Editar"
+  And Selecionei a opção "Editar"
   When Eu editar a review para que ela fique "Horrivel"
   And Selecionar a opção "Salvar"
   Then Serei redirecionado a "página inicial"
@@ -23,7 +23,7 @@ Scenario: Salvar edição de review
 Scenario: Remover review
   Given Estou no post "Oppenheimer" que já existe no sistema
   And Existe uma review do usuario "Elian Rodriguez" com texto "Horrivel"
-  When Eu selecionar a opção "Remover" a review do usuario "1"
+  When Eu selecionar a opção "Remover" a review do usuario "Elian Rodriguez"
   Then A review do usuario "Elian Rodriguez" no post "Oppenheimer" estará em branco " "
 
 Scenario: Falha na edição

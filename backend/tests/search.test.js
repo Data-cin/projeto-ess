@@ -1,112 +1,105 @@
-const { defineFeature, loadFeature } = require('jest-cucumber');
-const axios = require('axios');
-const search_feature = loadFeature('./tests/features/search.feature');
+const { defineFeature, loadFeature } = require("jest-cucumber");
+const axios = require("axios");
+const search_feature = loadFeature("./tests/features/search.feature");
 
-defineFeature(search_feature, test => {
+defineFeature(search_feature, (test) => {
+  // Nesse cenário, filme1 e filme2 são os mesmos em todas as etapas
+  // filme é uma palavra contida dentro do nome filme1 e filme2
+  test(
+    "Busca de filme por nome",
+    ({ given, and, when, then }) => {
+      let search_results;
 
-    // Nesse cenário, filme1 e filme2 são os mesmos em todas as etapas
-    // filme é uma palavra contida dentro do nome filme1 e filme2
-    test('Busca de filme por nome', ({ given, and, when, then }) => {
+      given("que o usuário está na página inicial", async () => {});
 
-        let search_results;
+      and(
+        /^os filmes "(.*)" e "(.*)" estão cadastrados no site$/,
+        (filme1, filme2) => {},
+      );
 
-        given('que o usuário está na página inicial', async () => {
+      when("o usuário seleciona a opção de pesquisa", () => {});
 
-        });
+      and(
+        /^o usuário escreve "(.*)" e clica no botão "Pesquisar"$/,
+        async (filme) => {
+          const requisicao = {
+            busca: filme,
+          };
+          search_results = await axios.get("http://localhost:3000/search", {
+            data: requisicao,
+          });
+        },
+      );
 
-        and(/^os filmes "(.*)" e "(.*)" estão cadastrados no site$/, (filme1, filme2) => {
+      then(
+        /^os posts dos filmes "(.*)" e "(.*)" são exibidas$/,
+        (filme1, filme2) => {
+          let movie_names = [];
+          for (let i = 0; i < search_results.data.length; i++) {
+            movie_names.push(search_results.data[i].nome);
+          }
 
-        });
-
-        when('o usuário seleciona a opção de pesquisa', () => {
-
-        });
-
-        and(/^o usuário escreve "(.*)" e clica no botão "Pesquisar"$/, async (filme) => {
-            const requisicao = {
-                "busca": filme
-            };
-            search_results = await axios.get('http://localhost:3000/search', {data:requisicao});
-        });
-
-        then(/^os posts dos filmes "(.*)" e "(.*)" são exibidas$/, (filme1, filme2) => {
-
-            let movie_names = [];
-            for (let i = 0; i < search_results.data.length; i++) {
-                movie_names.push(search_results.data[i].nome);
-            }
-
-            expect(movie_names).toEqual(
-                [
-                    filme1,
-                    filme2
-                ]
-            );
-        });
+          expect(movie_names).toEqual([filme1, filme2]);
+        },
+      );
     },
 
+    test("Busca de filmes por categoria", ({ given, and, when, then }) => {
+      let search_results;
 
-    test('Busca de filmes por categoria', ({ given, and, when, then }) => {
+      given("que o usuário está na página inicial", () => {});
 
-        let search_results;
+      and(
+        /^a categoria "(.*)" está cadastrada e existem filmes categorizados nessa categoria$/,
+        (categoria) => {},
+      );
 
-        given('que o usuário está na página inicial', () => {
+      when("o usuário seleciona a opção de pesquisa", () => {});
 
-        });
+      and(
+        /^o usuário escreve "(.*)" e clica no botão "Pesquisar"$/,
+        async (categoria) => {
+          const requisicao = {
+            busca: categoria,
+          };
+          search_results = await axios.get("http://localhost:3000/search", {
+            data: requisicao,
+          });
+        },
+      );
 
-        and(/^a categoria "(.*)" está cadastrada e existem filmes categorizados nessa categoria$/, (categoria) => {
+      then(/^Reviews de filmes de "(.*)" são exibidas$/, (categoria) => {
+        let movie_genre = [];
+        for (let i = 0; i < search_results.data.length; i++) {
+          movie_genre.push(search_results.data[i].genero);
+        }
 
-        });
+        expect(movie_genre).toEqual([categoria]);
+      });
+    }),
+  );
 
-        when('o usuário seleciona a opção de pesquisa', () => {
+  test("Busca falhou (Serviço)", ({ given, when, then, and }) => {
+    let search_results;
 
-        });
+    given(/^o filme "(.*)" não esta cadastrado no site$/, (arg0) => {});
 
-        and(/^o usuário escreve "(.*)" e clica no botão "Pesquisar"$/, async (categoria) => {
-            const requisicao = {
-                "busca": categoria
-            };
-            search_results = await axios.get('http://localhost:3000/search', {data:requisicao});
-        });
-
-        then(/^Reviews de filmes de "(.*)" são exibidas$/, (categoria) => {
-
-            let movie_genre = [];
-            for (let i = 0; i < search_results.data.length; i++) {
-                movie_genre.push(search_results.data[i].genero);
-            }
-
-            expect(movie_genre).toEqual(
-                [
-                    categoria
-                ],
-            );
-        });
-    }));
-
-    test('Busca falhou (Serviço)', ({ given, when, then, and }) => {
-
-        let search_results;
-
-        given(/^o filme "(.*)" não esta cadastrado no site$/, (arg0) => {
-
-        });
-
-        when(/^o usuário pesquisa "(.*)"$/, async (filme) => {
-            const requisicao = {
-                "busca": filme
-            };
-            search_results = await axios.get('http://localhost:3000/search', {data:requisicao});
-        });
-
-        then('o servidor retorna uma mensagem de erro', () => {
-
-        });
-
-        and('uma mensagem informando que não foram encontrados resultados é exibida', () => {
-            expect(search_results.data).toEqual(
-                []
-            );
-        });
+    when(/^o usuário pesquisa "(.*)"$/, async (filme) => {
+      const requisicao = {
+        busca: filme,
+      };
+      search_results = await axios.get("http://localhost:3000/search", {
+        data: requisicao,
+      });
     });
+
+    then("o servidor retorna uma mensagem de erro", () => {});
+
+    and(
+      "uma mensagem informando que não foram encontrados resultados é exibida",
+      () => {
+        expect(search_results.data).toEqual([]);
+      },
+    );
+  });
 });
